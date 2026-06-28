@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+tests/test_chunking.py
+vectorforge/__init__.py
+vectorforge/chunking.py
+vectorforge.egg-info/PKG-INFO
+vectorforge.egg-info/SOURCES.txt
+vectorforge.egg-info/dependency_links.txt
+vectorforge.egg-info/top_level.txt
