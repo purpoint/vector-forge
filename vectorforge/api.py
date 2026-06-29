@@ -11,6 +11,8 @@ Then open http://localhost:8000/docs  for interactive, auto-generated docs.
 from __future__ import annotations
 
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from pathlib import Path
 from pydantic import BaseModel, Field
 
 from .pipeline import RAGPipeline
@@ -85,3 +87,10 @@ def query(req: QueryRequest) -> QueryResponse:
             for h in answer.context_used
         ],
     )
+
+STATIC_DIR = Path(__file__).parent / "static"
+
+
+@app.get("/")
+def index():
+    return FileResponse(STATIC_DIR / "index.html")
