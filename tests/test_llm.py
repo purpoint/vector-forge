@@ -43,5 +43,5 @@ def test_pipeline_query_end_to_end():
     rag = RAGPipeline()
     rag.ingest("The Eiffel Tower is 330 metres tall.", doc_id="eiffel")
     ans = rag.query("How tall is the Eiffel Tower?")
-    assert ans.context_used          # something was retrieved
-    assert ans.citations             # and cited
+    assert ans.context_used         
+    assert ans.citations             
