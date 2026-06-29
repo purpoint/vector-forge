@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import uuid
 
+
+from .llm import Answer, build_llm
 from .chunking import chunk_text
 from .embeddings import Embedder, HashEmbedder
 from .vectorstore import InMemoryVectorStore, Record, SearchHit, VectorStore
@@ -26,6 +28,7 @@ class RAGPipeline:
         self,
         embedder: Embedder | None = None,
         store: VectorStore | None = None,
+        llm=None,
         chunk_size: int = 800,
         overlap: int = 150,
         top_k: int = 4,
@@ -33,6 +36,7 @@ class RAGPipeline:
         # Defaults keep it runnable with zero setup; pass your own to swap parts.
         self.embedder = embedder or HashEmbedder()
         self.store = store or InMemoryVectorStore()
+        self.llm = llm or build_llm("echo")
         self.chunk_size = chunk_size
         self.overlap = overlap
         self.top_k = top_k
@@ -71,3 +75,8 @@ class RAGPipeline:
         k = k or self.top_k
         query_vector = self.embedder.embed([question])[0]
         return self.store.search(query_vector, k)
+    
+    def query(self, question: str, k: int | None = None) -> Answer:
+        """Retrieve relevant chunks, then generate a grounded answer."""
+        hits = self.retrieve(question, k)
+        return self.llm.generate(question, hits)
