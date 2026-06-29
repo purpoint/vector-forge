@@ -1,10 +1,15 @@
 # VectorForge
 
+### 🔗 [Live demo →](https://vector-forge-xvi8.onrender.com)
+*Paste any text, ask a question, get a grounded answer with the exact passages it used — ranked by similarity.*
+
 A retrieval-augmented generation (RAG) engine built **from scratch** — no Pinecone, no LangChain, no vector-database black box. Documents go in, grounded answers with citations come out. Cosine similarity is hand-written with NumPy; every external dependency (the vector store, the embedder, the LLM) sits behind a small interface so it can be swapped without touching the pipeline.
 
-Built with **Python + FastAPI**. Runs end-to-end with **zero API keys** (offline embedder + offline generator), so the whole thing is cloneable and testable in under a minute.
+Built with **Python + FastAPI**. The live demo uses real semantic embeddings (Voyage AI, free tier); the codebase also runs end-to-end with **zero API keys** (offline embedder + offline generator), so it's cloneable and testable in under a minute.
 
-`Python 3.10+` · `41 passing tests` · `REST API` · `self-measuring eval harness`
+`Python 3.10+` · `41 passing tests` · `REST API` · `live demo` · `self-measuring eval harness`
+
+> Note: the demo runs on a free tier that sleeps when idle — the first request after a while can take ~50 seconds to wake.
 
 ---
 
