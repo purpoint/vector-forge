@@ -1,25 +1,44 @@
-"""FastAPI web layer — the engine's front door to the outside world.
+"""FastAPI web layer -- the engine's front door to the outside world.
 
-This is the 'waiter': it exposes the RAGPipeline over HTTP so anything that
-speaks the web (a browser, curl, a frontend) can use the engine. The pipeline
-itself is untouched; we just translate HTTP requests into pipeline calls.
+Exposes the RAGPipeline over HTTP and serves the web UI. The pipeline is
+untouched; we just translate HTTP requests into pipeline calls and pick the
+real or offline providers based on which API keys are present.
 
 Run it:   uvicorn vectorforge.api:app --reload
-Then open http://localhost:8000/docs  for interactive, auto-generated docs.
+Then open http://localhost:8000/        for the web UI
+       or http://localhost:8000/docs    for interactive API docs
 """
 
 from __future__ import annotations
 
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-from pathlib import Path
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
+from .embeddings import HashEmbedder, VoyageEmbedder
+from .llm import build_llm
 from .pipeline import RAGPipeline
 
-# One pipeline instance, shared across all requests.
+load_dotenv()  # read .env into the environment
+
 app = FastAPI(title="VectorForge", version="0.1.0")
-pipeline = RAGPipeline()
+
+STATIC_DIR = Path(__file__).parent / "static"
+
+
+def _make_pipeline() -> RAGPipeline:
+    # Real Voyage embeddings if the key is present; offline HashEmbedder otherwise.
+    embedder = VoyageEmbedder() if os.getenv("VOYAGE_API_KEY") else HashEmbedder()
+    # Real Claude only if an Anthropic key is set; otherwise the free offline EchoLLM.
+    llm = build_llm("anthropic") if os.getenv("ANTHROPIC_API_KEY") else build_llm("echo")
+    return RAGPipeline(embedder=embedder, llm=llm)
+
+
+pipeline = _make_pipeline()
 
 
 # --- request/response shapes (Pydantic validates these automatically) ---
@@ -54,6 +73,12 @@ class QueryResponse(BaseModel):
 
 # --- endpoints ---
 
+@app.get("/")
+def index():
+    """Serve the web UI."""
+    return FileResponse(STATIC_DIR / "index.html")
+
+
 @app.get("/health")
 def health() -> dict:
     """Liveness check: is the server up, and how many chunks are indexed?"""
@@ -87,10 +112,3 @@ def query(req: QueryRequest) -> QueryResponse:
             for h in answer.context_used
         ],
     )
-
-STATIC_DIR = Path(__file__).parent / "static"
-
-
-@app.get("/")
-def index():
-    return FileResponse(STATIC_DIR / "index.html")

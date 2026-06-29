@@ -3,3 +3,4 @@ fastapi>=0.110
 uvicorn>=0.29
 pytest>=8.0
 echo "httpx>=0.27" >> requirements.txt
+printf 'voyageai>=0.4\npython-dotenv>=1.0\n' >> requirements.txt
