@@ -1,0 +1,29 @@
+{
+  "documents": [
+    {
+      "doc_id": "photosynthesis",
+      "text": "Photosynthesis is how green plants convert light into energy. It happens in chloroplasts, which contain a green pigment called chlorophyll that absorbs sunlight. Plants take in carbon dioxide and water, and produce glucose and oxygen. The oxygen is released into the air."
+    },
+    {
+      "doc_id": "http-basics",
+      "text": "HTTP is the protocol of the web. A client sends a request and a server returns a response with a status code. 200 means success, 404 means the resource was not found, and 500 means a server error. HTTP is stateless, so each request is independent."
+    },
+    {
+      "doc_id": "espresso",
+      "text": "Espresso is brewed by forcing hot water under high pressure through finely ground coffee. The result is a small intense shot topped with a golden foam called crema. A latte adds steamed milk, while an americano adds hot water."
+    },
+    {
+      "doc_id": "vector-search",
+      "text": "Vector search finds items by meaning rather than exact keywords. Text is turned into an embedding, and similar meanings map to nearby points. Cosine similarity compares the angle between two vectors. Approximate nearest neighbor indexes like HNSW speed up search on large collections."
+    }
+  ],
+  "questions": [
+    { "question": "what pigment absorbs sunlight in plants?", "relevant_doc_ids": ["photosynthesis"] },
+    { "question": "what gas do plants release?", "relevant_doc_ids": ["photosynthesis"] },
+    { "question": "what does the 404 status code mean?", "relevant_doc_ids": ["http-basics"] },
+    { "question": "why is http called stateless?", "relevant_doc_ids": ["http-basics"] },
+    { "question": "what is the foam on espresso called?", "relevant_doc_ids": ["espresso"] },
+    { "question": "what does an HNSW index do?", "relevant_doc_ids": ["vector-search"] },
+    { "question": "which measure compares the angle between vectors?", "relevant_doc_ids": ["vector-search"] }
+  ]
+}
